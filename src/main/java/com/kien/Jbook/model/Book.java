@@ -1,7 +1,9 @@
 package com.kien.Jbook.model;
 
+import lombok.Data;
 import java.time.LocalDateTime;
 
+@Data
 public class Book {
     private Long id;
     private String title;
