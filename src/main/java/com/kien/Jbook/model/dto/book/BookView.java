@@ -1,0 +1,20 @@
+package com.kien.Jbook.model.dto.book;
+
+import lombok.Data;
+import java.time.LocalDateTime;
+
+@Data
+public class BookView {
+    private Long id;
+    private String title;
+    private String titleKana;
+    private String author;
+    private Long publisherId;
+    private String publisherName;
+    private Long userId;
+    private String userName;
+    private Integer price;
+    private boolean isDeleted;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
