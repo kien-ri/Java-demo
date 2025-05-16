@@ -1,5 +1,6 @@
 package com.kien.Jbook.common;
 
+import com.kien.Jbook.common.exception.InvalidParamCustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,15 @@ public class GlobalExceptionHandler {
     String MSG_INVALID_REQUEST = "";
 
     String MSG_STR = "message";
+
+    @ExceptionHandler(InvalidParamCustomException.class)
+    public ResponseEntity<Map<String, Object>> invalidParamExceptionHandler(InvalidParamCustomException e) {
+        Map<String, Object> responseBody = Map.of(
+                e.getField(), e.getValue(),
+                MSG_STR, e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, Object>> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
