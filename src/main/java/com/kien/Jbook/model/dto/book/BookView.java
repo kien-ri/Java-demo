@@ -1,5 +1,6 @@
 package com.kien.Jbook.model.dto.book;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -14,7 +15,7 @@ public class BookView {
     private Long userId;
     private String userName;
     private Integer price;
-    private boolean isDeleted;
+    private Boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

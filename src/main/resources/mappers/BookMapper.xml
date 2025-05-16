@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kien.Jbook.mapper.BookMapper">
+
+    <select id="getById" parameterType="long" resultType="BookView">
+        SELECT
+            b.id AS id,
+            b.title AS title,
+            b.title_kana AS title_kana,
+            b.author AS author,
+            p.id AS publisher_id,
+            p.name AS publisher_name,
+            u.id AS user_id,
+            u.name AS user_name,
+            b.price AS price,
+            b.is_deleted AS is_deleted,
+            b.created_at AS created_at,
+            b.updated_at AS updated_at
+        FROM
+            books b
+        LEFT JOIN
+            publisher p
+        ON b.publisher_id = p.id
+        AND p.is_deleted = FALSE
+        LEFT JOIN
+            `user` u
+        ON b.user_id = u.id
+        AND u.is_deleted = FALSE
+        WHERE
+            b.id = #{id}
+        AND b.is_deleted = FALSE;
+    </select>
+
+</mapper>
