@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
 
     String MSG_STR = "message";
 
+    /**
+     * Service層の独自バリデーションに失敗する時throwされるカスタムエラー
+     * @param e
+     * @return
+     */
     @ExceptionHandler(InvalidParamCustomException.class)
     public ResponseEntity<Map<String, Object>> invalidParamExceptionHandler(InvalidParamCustomException e) {
         Map<String, Object> responseBody = Map.of(
@@ -41,6 +46,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
 
+    /**
+     * パラメータの変数型が違うエラー
+     * @param e
+     * @return
+     */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, Object>> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
         Map<String, Object> responseBody = new HashMap<>();
@@ -49,6 +59,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
 
+    /**
+     * パラメータの値が要件を満たさないエラー(id　> 0 など)
+     * @param e
+     * @return
+     */
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<List<Map<String, String>>> handleHandlerMethodValidationException(HandlerMethodValidationException e) {
         List<Map<String, String>> errors = new ArrayList<>();
@@ -73,6 +88,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * リクエストURLの間違いで発生するエラー
+     * @param e
+     * @return
+     */
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNoResourceFound(NoResourceFoundException e) {
         Map<String, Object> responseBody = new HashMap<>();

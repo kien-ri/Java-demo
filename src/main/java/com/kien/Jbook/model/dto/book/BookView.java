@@ -17,7 +17,7 @@ public class BookView {
     private Long userId;
     private String userName;
     private Integer price;
-    private Boolean isDeleted;
+    private Boolean isDeleted;  // ラッパー使わないとLombokのGetter,Setterの動作がおかしくなる
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
