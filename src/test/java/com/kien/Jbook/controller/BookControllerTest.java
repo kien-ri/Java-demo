@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
 public class BookControllerTest {
 
     @Autowired
