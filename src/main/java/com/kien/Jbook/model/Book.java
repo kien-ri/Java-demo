@@ -10,7 +10,7 @@ public class Book {
     private Long publisherId;
     private Long userId;
     private Integer price;
-    private Boolean isDeleted;
+    private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
