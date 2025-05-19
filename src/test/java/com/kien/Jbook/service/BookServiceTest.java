@@ -86,5 +86,17 @@ public class BookServiceTest {
 
             verify(bookMapper, never()).getById(any());
         }
+
+        @Test
+        void throwCustomExceptionWhenIdIsNull() {
+            Long bookId = null;
+            InvalidParamCustomException e = assertThrows(InvalidParamCustomException.class, () -> {
+                bookService.getById(bookId);
+            });
+            String expectedMsg = "入力された値が無効です。";
+            assertThat(e.getMessage()).isEqualTo(expectedMsg);
+
+            verify(bookMapper, never()).getById(any());
+        }
     }
 }
