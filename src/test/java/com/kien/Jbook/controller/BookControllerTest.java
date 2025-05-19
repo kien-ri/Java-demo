@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,6 +62,8 @@ public class BookControllerTest {
             mockMvc.perform(MockMvcRequestBuilders.get("/books/" + bookId))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(bookView)));
+
+            verify(bookService, times(1)).getById(bookId);
         }
 
         @Test
@@ -71,6 +73,8 @@ public class BookControllerTest {
 
             mockMvc.perform(MockMvcRequestBuilders.get("/books/" + bookId))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+            verify(bookService, times(1)).getById(bookId);
         }
 
         @Test
@@ -85,6 +89,8 @@ public class BookControllerTest {
             ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/books/" + negativeId));
             resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
             resultActions.andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+            verify(bookService, never()).getById(any());
         }
 
         @Test
@@ -99,6 +105,8 @@ public class BookControllerTest {
             mockMvc.perform(MockMvcRequestBuilders.get("/books/" + zeroId))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+            verify(bookService, never()).getById(any());
         }
 
         @Test
@@ -111,6 +119,8 @@ public class BookControllerTest {
             mockMvc.perform(MockMvcRequestBuilders.get("/books/" + doubleId))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+            verify(bookService, never()).getById(any());
         }
 
         @Test
@@ -123,6 +133,8 @@ public class BookControllerTest {
             mockMvc.perform(MockMvcRequestBuilders.get("/books/" + strId))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+            verify(bookService, never()).getById(any());
         }
 
         @Test
@@ -134,6 +146,8 @@ public class BookControllerTest {
             mockMvc.perform(MockMvcRequestBuilders.get("/books/"))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+            verify(bookService, never()).getById(any());
         }
     }
 }

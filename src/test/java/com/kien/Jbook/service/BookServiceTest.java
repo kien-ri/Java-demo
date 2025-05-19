@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class BookServiceTest {
@@ -48,6 +49,8 @@ public class BookServiceTest {
 
             BookView result = bookService.getById(bookId);
             assertThat(result).isEqualTo(bookView);
+
+            verify(bookMapper, times(1)).getById(any());
         }
 
         @Test
@@ -56,6 +59,8 @@ public class BookServiceTest {
             when(bookMapper.getById(bookId)).thenReturn(null);
             BookView result = bookService.getById(bookId);
             assertThat(result).isNull();
+
+            verify(bookMapper, times(1)).getById(any());
         }
 
         @Test
@@ -66,6 +71,8 @@ public class BookServiceTest {
             });
             String expectedMsg = "入力された値が無効です。";
             assertThat(e.getMessage()).isEqualTo(expectedMsg);
+
+            verify(bookMapper, never()).getById(any());
         }
 
         @Test
@@ -76,6 +83,8 @@ public class BookServiceTest {
             });
             String expectedMsg = "入力された値が無効です。";
             assertThat(e.getMessage()).isEqualTo(expectedMsg);
+
+            verify(bookMapper, never()).getById(any());
         }
     }
 }
