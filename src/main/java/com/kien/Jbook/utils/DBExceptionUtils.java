@@ -7,6 +7,12 @@ import java.util.regex.Pattern;
 
 public class DBExceptionUtils {
 
+    /**
+     * DataIntegrityViolationExceptionはspringのラッパクラス
+     * その根本のエラー原因が外部キー不存在であるかをチェックする
+     * @param e
+     * @return
+     */
     public static boolean isForeignKeyViolation(DataIntegrityViolationException e) {
         Throwable rootCause = e.getRootCause();
         return rootCause instanceof SQLIntegrityConstraintViolationException

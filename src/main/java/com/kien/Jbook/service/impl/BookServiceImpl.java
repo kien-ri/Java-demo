@@ -57,15 +57,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookBasicInfo registerBook(BookCreate bookCreate) {
+        // 1. DTO to Entity
         LocalDateTime currentTime = LocalDateTime.now();
-        Book book = bookCreate.toEntity(currentTime, currentTime);
+        Book book = bookCreate.toEntity(currentTime);
 
+        // 2. パラメータのバリデーション
         validateBookParam(book);
 
+        // 3. INSERT実行
         int insertedCount = -1;
         try {
             insertedCount = bookMapper.save(book);
         } catch (DuplicateKeyException e) {
+            // 3.1 主キー重複エラー
             throw new CustomException(
                     MSG_DUPLICATE_KEY,
                     HttpStatus.CONFLICT,
@@ -73,6 +77,7 @@ public class BookServiceImpl implements BookService {
                     bookCreate.getId()
             );
         } catch (DataIntegrityViolationException e) {
+            // 3.2 外部キー存在しないエラー
             if (DBExceptionUtils.isForeignKeyViolation(e)) {
                 String errorMsg = e.getMessage() != null ? e.getMessage() : "";
                 String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(errorMsg));
@@ -94,6 +99,8 @@ public class BookServiceImpl implements BookService {
             throw e;
         }
 
+        // 4. INSERT結果の検証
+        // 4.1 挿入件数のチェック
         if (insertedCount <= 0) {
             throw new CustomException(
                     MSG_INSERT_ERROR,
@@ -102,6 +109,7 @@ public class BookServiceImpl implements BookService {
                     null
             );
         }
+        // 4.2 インクリメントのIDが付与されたかをチェック(Mybatis UseGeneratedKeys)
         Long bookId = book.getId();
         if (bookId == null) {
             throw new CustomException(
@@ -112,11 +120,15 @@ public class BookServiceImpl implements BookService {
             );
         }
 
-        return new BookBasicInfo(bookId, book.getTitle());
+        // 5. 戻り値DTO構成
+        return new BookBasicInfo(
+                bookId,
+                book.getTitle()
+        );
     }
 
     private void validateBookParam(Book book) {
-        // Validate book information ID
+        // Validate book ID
         ValidationUtils.validatePositiveId(
                 book.getId(),
                 "id",

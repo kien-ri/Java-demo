@@ -28,7 +28,7 @@ public class BookCreate {
     @Min(0)
     private Integer price;
 
-    public Book toEntity(LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Book toEntity(LocalDateTime current) {
         return new Book(
                 id,
                 title,
@@ -38,8 +38,8 @@ public class BookCreate {
                 userId,
                 price,
                 false,
-                createdAt,
-                updatedAt
+                current,
+                current
         );
     }
 }
