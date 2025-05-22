@@ -1,6 +1,5 @@
 package com.kien.Jbook.common;
 
-import com.kien.Jbook.common.exception.InvalidParamCustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,18 +31,26 @@ public class GlobalExceptionHandler {
 
     String MSG_STR = "message";
 
-    /**
-     * Service層の独自バリデーションに失敗する時throwされるカスタムエラー
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(InvalidParamCustomException.class)
-    public ResponseEntity<Map<String, Object>> invalidParamExceptionHandler(InvalidParamCustomException e) {
-        Map<String, Object> responseBody = Map.of(
-                e.getField(), e.getValue(),
-                MSG_STR, e.getMessage()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+//    /**
+//     * Service層の独自バリデーションに失敗する時throwされるカスタムエラー
+//     * @param e
+//     * @return
+//     */
+//    @ExceptionHandler(InvalidParamCustomException.class)
+//    public ResponseEntity<Map<String, Object>> invalidParamExceptionHandler(InvalidParamCustomException e) {
+//        Map<String, Object> responseBody = Map.of(
+//                e.getField(), e.getValue(),
+//                MSG_STR, e.getMessage()
+//        );
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+//    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Map<String, Object>> handleCustomException(CustomException e) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put(e.getField(), e.getValue());
+        responseBody.put(MSG_STR, e.getMessage());
+        return ResponseEntity.status(e.getHttpStatus()).body(responseBody);
     }
 
     /**

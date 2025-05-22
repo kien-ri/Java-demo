@@ -1,6 +1,5 @@
 package com.kien.Jbook.service;
 
-import com.kien.Jbook.common.exception.InvalidParamCustomException;
 import com.kien.Jbook.mapper.BookMapper;
 import com.kien.Jbook.model.dto.book.BookView;
 import org.junit.jupiter.api.Nested;
