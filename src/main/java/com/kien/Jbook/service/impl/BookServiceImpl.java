@@ -3,7 +3,6 @@ package com.kien.Jbook.service.impl;
 import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.utils.DBExceptionUtils;
 import com.kien.Jbook.utils.ValidationUtils;
-import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.mapper.BookMapper;
 import com.kien.Jbook.model.Book;
 import com.kien.Jbook.model.dto.book.BookBasicInfo;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
