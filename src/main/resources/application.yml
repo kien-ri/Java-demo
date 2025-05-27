@@ -18,3 +18,5 @@ messages:
     invalidValue: "入力された値が無効です。"
     typeMissmatch: "パラメータの型が間違っています"
     invalidRequest: "無効なリクエストです。URLをチェックしてください。"
+    nonExistentBook: "指定IDの書籍情報が存在しません"
+    nonExistentFK: "存在しない外部キーです。"

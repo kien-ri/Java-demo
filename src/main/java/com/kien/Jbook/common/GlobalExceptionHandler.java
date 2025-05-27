@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.method.ParameterValidationResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @ResponseBody
@@ -37,6 +39,21 @@ public class GlobalExceptionHandler {
         responseBody.put(e.getField(), e.getValue());
         responseBody.put(MSG_STR, e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(responseBody);
+    }
+
+    /**
+     * request body のプロパティが要件を満たさないエラー
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<Map<String, Object>>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        List<Map<String, Object>> errors = e.getBindingResult().getFieldErrors().stream()
+                .map(error -> Map.of(
+                        error.getField(), error.getRejectedValue(),
+                        MSG_STR, MSG_INVALID_VALUE
+                )).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     /**

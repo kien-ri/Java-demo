@@ -1,7 +1,10 @@
 package com.kien.Jbook.controller;
 
+import com.kien.Jbook.model.dto.book.BookBasicInfo;
+import com.kien.Jbook.model.dto.book.BookUpdate;
 import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +25,11 @@ public class BookController {
         } else {
             return ResponseEntity.ok(bookView);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity<BookBasicInfo> update(@RequestBody @Valid BookUpdate bookUpdate) {
+        BookBasicInfo info = bookService.update(bookUpdate);
+        return ResponseEntity.ok(info);
     }
 }
