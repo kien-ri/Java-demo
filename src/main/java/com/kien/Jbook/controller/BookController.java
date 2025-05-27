@@ -28,8 +28,8 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookBasicInfo> registerBook(@Valid @RequestBody BookCreate bookCreate) {
-        BookBasicInfo createdResponse = bookService.registerBook(bookCreate);
+    public ResponseEntity<BookBasicInfo> register(@Valid @RequestBody BookCreate bookCreate) {
+        BookBasicInfo createdResponse = bookService.register(bookCreate);
         return ResponseEntity.ok(createdResponse);
     }
 }

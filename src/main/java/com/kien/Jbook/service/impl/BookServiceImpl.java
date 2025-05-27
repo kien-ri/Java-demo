@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookBasicInfo registerBook(BookCreate bookCreate) {
+    public BookBasicInfo register(BookCreate bookCreate) {
         // 1. DTO to Entity
         LocalDateTime currentTime = LocalDateTime.now();
         Book book = bookCreate.toEntity(currentTime);

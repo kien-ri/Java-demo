@@ -8,5 +8,5 @@ import jakarta.validation.Valid;
 public interface BookService {
     BookView getById(Long id);
 
-    BookBasicInfo registerBook(@Valid BookCreate bookCreate);
+    BookBasicInfo register(@Valid BookCreate bookCreate);
 }
