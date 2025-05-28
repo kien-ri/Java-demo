@@ -16,6 +16,7 @@ mybatis:
 messages:
   errors:
     invalidValue: "入力された値が無効です。"
+    unexpectedError: "予想外のエラーが発生しました。エラー内容："
     typeMissmatch: "パラメータの型が間違っています"
     invalidRequest: "無効なリクエストです。URLをチェックしてください。"
     nonExistentBook: "指定IDの書籍情報が存在しません"

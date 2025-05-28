@@ -1,6 +1,6 @@
 package com.kien.Jbook.service;
 
-import com.kien.Jbook.common.exception.InvalidParamCustomException;
+import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.mapper.BookMapper;
 import com.kien.Jbook.model.dto.book.BookView;
 import org.junit.jupiter.api.Nested;
@@ -66,7 +66,7 @@ public class BookServiceTest {
         @Test
         void throwCustomExceptionWhenIdIsNegative() {
             Long bookId = -1L;
-            InvalidParamCustomException e = assertThrows(InvalidParamCustomException.class, () -> {
+            CustomException e = assertThrows(CustomException.class, () -> {
                 bookService.getById(bookId);
             });
             String expectedMsg = "入力された値が無効です。";
@@ -78,7 +78,7 @@ public class BookServiceTest {
         @Test
         void throwCustomExceptionWhenIdIsZero() {
             Long bookId = 0L;
-            InvalidParamCustomException e = assertThrows(InvalidParamCustomException.class, () -> {
+            CustomException e = assertThrows(CustomException.class, () -> {
                 bookService.getById(bookId);
             });
             String expectedMsg = "入力された値が無効です。";
@@ -90,7 +90,7 @@ public class BookServiceTest {
         @Test
         void throwCustomExceptionWhenIdIsNull() {
             Long bookId = null;
-            InvalidParamCustomException e = assertThrows(InvalidParamCustomException.class, () -> {
+            CustomException e = assertThrows(CustomException.class, () -> {
                 bookService.getById(bookId);
             });
             String expectedMsg = "入力された値が無効です。";
