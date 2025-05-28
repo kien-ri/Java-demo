@@ -128,9 +128,9 @@ public class BookMapperTest {
     @Sql(scripts = {"/schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
     @Sql(
             scripts = {
-                    "/mapper/data/books/getById/publisher.sql",
-                    "/mapper/data/books/getById/user.sql",
-                    "/mapper/data/books/getById/books.sql"
+                    "/mapper/data/books/save/publisher.sql",
+                    "/mapper/data/books/save/user.sql",
+                    "/mapper/data/books/save/books.sql"
             },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS
     )
