@@ -31,6 +31,9 @@ public class GlobalExceptionHandler {
     @Value("${messages.errors.invalidRequest}")
     String MSG_INVALID_REQUEST = "";
 
+    @Value("${messages.errors.unexpectedError}")
+    String MSG_UNEXPECTED_ERROR = "";
+
     String MSG_STR = "message";
 
     @ExceptionHandler(CustomException.class)
@@ -109,5 +112,12 @@ public class GlobalExceptionHandler {
         responseBody.put(String.valueOf(e.getHttpMethod()), "/" + e.getResourcePath());
         responseBody.put(MSG_STR, MSG_INVALID_REQUEST);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> exceptionHandler(RuntimeException e) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("error", MSG_UNEXPECTED_ERROR + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
     }
 }
