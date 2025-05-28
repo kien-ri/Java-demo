@@ -1,6 +1,7 @@
 package com.kien.Jbook.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.model.dto.book.BookBasicInfo;
 import com.kien.Jbook.model.dto.book.BookCreate;
 import com.kien.Jbook.model.dto.book.BookView;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -184,7 +186,7 @@ public class BookControllerTest {
         }
 
         @Test
-        void return200_whenRegisterWithId() throws Exception {
+        void return200WhenRegisterWithId() throws Exception {
             BookCreate bookCreate = new BookCreate(
                     222L,
                     "Kotlin入門",
@@ -209,7 +211,7 @@ public class BookControllerTest {
         }
 
         @Test
-        public void testReturn400WhenIdIsNegative() throws Exception {
+        public void return400WhenIdIsNegative() throws Exception {
             BookCreate bookCreate = new BookCreate(
                     -1L,
                     "Kotlin入門",
@@ -235,6 +237,315 @@ public class BookControllerTest {
                     .andExpect(content().json(expectedJson));
 
             verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenIdIsZero() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    0L,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    100L,
+                    2500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "id", 0L,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenPriceIsNegative() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    null,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    100L,
+                    -500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "price", -500,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenPublisherIdIsNegative() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    null,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    -1L,
+                    100L,
+                    2500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "publisherId", -1L,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenPublisherIdIsZero() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    null,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    0L,
+                    100L,
+                    2500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "publisherId", 0L,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenuserIdIsNegative() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    null,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    -100L,
+                    2500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "userId", -100L,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return400WhenUserIdIsZero() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    null,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    0L,
+                    2500
+            );
+
+            Map<String, String>[] expectedResponseBody = new Map[] {
+                    Map.of(
+                            "userId", 0L,
+                            "message", "入力された値が無効です"
+                    )
+            };
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, never()).register(any());
+        }
+
+        @Test
+        public void return409WhenIdDuplicated() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    1L,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    100L,
+                    2500
+            );
+
+            Map<String, Object> expectedResponseBody = new HashMap<>();
+            expectedResponseBody.put("id", 1L);
+            expectedResponseBody.put("message", "プライマリキーが重複しました。別の値にしてください");
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            CustomException expectedError = new CustomException(
+                    "プライマリキーが重複しました。別の値にしてください",
+                    HttpStatus.CONFLICT,
+                    "id",
+                    1L
+            );
+
+            when(bookService.register(any())).thenThrow(expectedError);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isConflict())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, times(1)).register(any());
+        }
+
+        @Test
+        public void return404WhenPublisherIdNotExists() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    1L,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    999L,
+                    100L,
+                    2500
+            );
+
+            Map<String, Object> expectedResponseBody = new HashMap<>();
+            expectedResponseBody.put("publisherId", 999L);
+            expectedResponseBody.put("message", "存在しない外部キーです。");
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            CustomException expectedError = new CustomException(
+                    "存在しない外部キーです。",
+                    HttpStatus.NOT_FOUND,
+                    "publisherId",
+                    999L
+            );
+
+            when(bookService.register(any())).thenThrow(expectedError);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, times(1)).register(any());
+        }
+
+        @Test
+        public void return404WhenUserIdNotExists() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    1L,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    999L,
+                    2500
+            );
+
+            Map<String, Object> expectedResponseBody = new HashMap<>();
+            expectedResponseBody.put("userId", 999L);
+            expectedResponseBody.put("message", "存在しない外部キーです。");
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            CustomException expectedError = new CustomException(
+                    "存在しない外部キーです。",
+                    HttpStatus.NOT_FOUND,
+                    "userId",
+                    999L
+            );
+
+            when(bookService.register(any())).thenThrow(expectedError);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, times(1)).register(any());
+        }
+
+        @Test
+        public void return500WhenRegisterFailed() throws Exception {
+            BookCreate bookCreate = new BookCreate(
+                    1L,
+                    "Kotlin入門",
+                    "コトリン ニュウモン",
+                    "山田太郎",
+                    1L,
+                    999L,
+                    2500
+            );
+
+            Map<String, Object> expectedResponseBody = new HashMap<>();
+            expectedResponseBody.put("error", "予想外のエラーが発生しました。エラー内容：エラー詳細");
+            String expectedJson = objectMapper.writeValueAsString(expectedResponseBody);
+
+            RuntimeException expectedError = new RuntimeException(
+                    "エラー詳細"
+            );
+            when(bookService.register(any())).thenThrow(expectedError);
+
+            mockMvc.perform(post("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookCreate)))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(content().json(expectedJson));
+
+            verify(bookService, times(1)).register(any());
         }
     }
 }

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 @ResponseBody
@@ -31,6 +30,9 @@ public class GlobalExceptionHandler {
 
     @Value("${messages.errors.invalidRequest}")
     String MSG_INVALID_REQUEST = "";
+
+    @Value("${messages.errors.unexpectedError}")
+    String MSG_UNEXPECTED_ERROR = "";
 
     String MSG_STR = "message";
 
@@ -112,5 +114,12 @@ public class GlobalExceptionHandler {
         responseBody.put(String.valueOf(e.getHttpMethod()), "/" + e.getResourcePath());
         responseBody.put(MSG_STR, MSG_INVALID_REQUEST);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> exceptionHandler(RuntimeException e) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("error", MSG_UNEXPECTED_ERROR + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
     }
 }
