@@ -2,6 +2,11 @@ package com.kien.Jbook.utils;
 
 public class StringUtils {
 
+    /**
+     * スネークケース（例: sample_text）をキャメルケース（例: sampleText）に変換する
+     * @param input
+     * @return
+     */
     public static String toCamelCase(String input) {
         if (input == null) {
             return null;
