@@ -2,6 +2,7 @@ package com.kien.Jbook.service.impl;
 
 import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.utils.DBExceptionUtils;
+import com.kien.Jbook.utils.ReflectionUtils;
 import com.kien.Jbook.utils.ValidationUtils;
 import com.kien.Jbook.mapper.BookMapper;
 import com.kien.Jbook.model.Book;
@@ -16,7 +17,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
 import static com.kien.Jbook.utils.StringUtils.toCamelCase;
@@ -47,7 +47,7 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_INVALID_VALUE,
                     HttpStatus.BAD_REQUEST,
-                    "id",
+                    Book.FIELD_ID,
                     id
             );
         }
@@ -73,22 +73,14 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_DUPLICATE_KEY,
                     HttpStatus.CONFLICT,
-                    "id",
+                    Book.FIELD_ID,
                     bookCreate.getId()
             );
         } catch (DataIntegrityViolationException e) {
             // 3.2 外部キー存在しないエラー
             if (DBExceptionUtils.isForeignKeyViolation(e)) {
-                String errorMsg = e.getMessage() != null ? e.getMessage() : "";
-                String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(errorMsg));
-                Object propertyValue = null;
-                try {
-                    Field property = BookCreate.class.getDeclaredField(propertyName);
-                    property.setAccessible(true);
-                    propertyValue = property.get(bookCreate);
-                } catch (NoSuchFieldException | IllegalAccessException ex) {
-                    propertyValue = null;
-                }
+                String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(e.getMessage()));
+                Object propertyValue = ReflectionUtils.getPropertyValue(bookCreate, propertyName);
                 throw new CustomException(
                         MSG_NONEXISTENT_FK,
                         HttpStatus.NOT_FOUND,
@@ -115,7 +107,7 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_NO_ID_GENERATED,
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "id",
+                    Book.FIELD_ID,
                     null
             );
         }
@@ -131,19 +123,19 @@ public class BookServiceImpl implements BookService {
         // Validate book ID
         ValidationUtils.validatePositiveId(
                 book.getId(),
-                "id",
+                Book.FIELD_ID,
                 MSG_INVALID_VALUE
         );
         // Validate publisher ID
         ValidationUtils.validatePositiveId(
                 book.getPublisherId(),
-                "publisherId",
+                Book.FIELD_PUBLISHER_ID,
                 MSG_INVALID_VALUE
         );
         // Validate user ID
         ValidationUtils.validatePositiveId(
                 book.getUserId(),
-                "userId",
+                Book.FIELD_USER_ID,
                 MSG_INVALID_VALUE
         );
         // Validate price
@@ -151,7 +143,7 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_INVALID_VALUE,
                     HttpStatus.BAD_REQUEST,
-                    "price",
+                    Book.FIELD_PRICE,
                     book.getPrice()
             );
         }
