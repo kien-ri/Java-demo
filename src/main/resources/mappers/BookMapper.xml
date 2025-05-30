@@ -34,6 +34,22 @@
         AND b.is_deleted = FALSE;
     </select>
 
+    <update id="update" parameterType="Book">
+        UPDATE
+            `books`
+        SET
+            title = #{title},
+            title_kana = #{titleKana},
+            author = #{author},
+            publisher_id = #{publisherId},
+            user_id = #{userId},
+            price = #{price},
+            updated_at = #{updatedAt}
+        WHERE
+            id = #{id}
+        AND is_deleted = false
+    </update>
+
     <insert id="save" parameterType="Book" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `books`
         SET

@@ -7,6 +7,7 @@ import com.kien.Jbook.utils.ValidationUtils;
 import com.kien.Jbook.mapper.BookMapper;
 import com.kien.Jbook.model.Book;
 import com.kien.Jbook.model.dto.book.BookBasicInfo;
+import com.kien.Jbook.model.dto.book.BookUpdate;
 import com.kien.Jbook.model.dto.book.BookCreate;
 import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
@@ -17,9 +18,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 import static com.kien.Jbook.utils.StringUtils.toCamelCase;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -28,6 +30,9 @@ public class BookServiceImpl implements BookService {
 
     @Value("${messages.errors.invalidValue}")
     private String MSG_INVALID_VALUE = "";
+
+    @Value("${messages.errors.nonExistentBook}")
+    private String MSG_NON_EXISTENT_BOOK = "";
 
     @Value("${messages.errors.insertError}")
     private String MSG_INSERT_ERROR = "";
@@ -115,6 +120,51 @@ public class BookServiceImpl implements BookService {
         // 5. 戻り値DTO構成
         return new BookBasicInfo(
                 bookId,
+                book.getTitle()
+        );
+    }
+
+    @Override
+    public BookBasicInfo update(BookUpdate bookUpdate) {
+        // 1. DTO to Entity
+        LocalDateTime current = LocalDateTime.now();
+        Book book = bookUpdate.toEntity(current);
+
+        // 2. パラメータのバリデーション
+        validateBookParam(book);
+
+        // 3. UPDATE実行
+        int updatedCount = -1;
+        try {
+            updatedCount = bookMapper.update(book);
+        } catch (DataIntegrityViolationException e) {
+            // 3.1 外部キー存在しないエラー
+            if (DBExceptionUtils.isForeignKeyViolation(e)) {
+                String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(e.getMessage()));
+                Object propertyValue = ReflectionUtils.getPropertyValue(bookUpdate, propertyName);
+                throw new CustomException(
+                        MSG_NONEXISTENT_FK,
+                        HttpStatus.NOT_FOUND,
+                        propertyName,
+                        propertyValue
+                );
+            }
+            throw e;
+        }
+
+        // 4. 結果検証
+        if (updatedCount <= 0) {
+            throw new CustomException(
+                    MSG_NON_EXISTENT_BOOK,
+                    HttpStatus.NOT_FOUND,
+                    Book.FIELD_ID,
+                    book.getId()
+            );
+        }
+
+        // 5. 戻り値DTO構成
+        return new BookBasicInfo(
+                book.getId(),
                 book.getTitle()
         );
     }

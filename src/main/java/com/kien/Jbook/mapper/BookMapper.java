@@ -8,5 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BookMapper {
     BookView getById(Long id);
 
+    int update(Book book);
+
     int save(Book book);
 }

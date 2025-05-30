@@ -17,6 +17,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MybatisTest
@@ -423,6 +424,156 @@ public class BookMapperTest {
             DataIntegrityViolationException e = assertThrows(DataIntegrityViolationException.class, () -> bookMapper.save(book));
             Throwable rootCause = e.getRootCause();
             assertThat(rootCause instanceof SQLIntegrityConstraintViolationException).isTrue();
+            int errorCode = ((SQLIntegrityConstraintViolationException) rootCause).getErrorCode();
+            assertThat(errorCode).isEqualTo(1452);
+        }
+    }
+
+    @Nested
+    @Sql(scripts = {"/schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+    @Sql(
+            scripts = {
+                    "/mapper/data/books/update/publisher.sql",
+                    "/mapper/data/books/update/user.sql",
+                    "/mapper/data/books/update/books.sql"
+            },
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS
+    )
+    class UpdateTest{
+        @Autowired
+        BooksTestMapper booksTestMapper;
+
+        @Test
+        void updateShouldUpdateBookAndReturnAffectedRows() {
+            LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
+            Book book = new Book(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    100L,
+                    4200,
+                    false,
+                    null,
+                    current
+            );
+
+            BookView expectedResult = new BookView(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    "技術出版社",
+                    100L,
+                    "テストユーザー",
+                    4200,
+                    false,
+                    LocalDateTime.of(2023, 1, 1, 10, 0, 0),
+                    current
+            );
+
+            BookView pre = bookMapper.getById(1L);
+            assertThat(pre.getTitle()).isEqualTo("Kotlin入門");
+
+            int affectedRows = bookMapper.update(book);
+            assertThat(affectedRows).isEqualTo(1);
+
+            BookView updatedBook = bookMapper.getById(1L);
+            assertThat(updatedBook).isEqualTo(expectedResult);
+        }
+
+        @Test
+        void returnZeroWhenBookDoesNotExist() {
+            LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
+            Book book = new Book(
+                    999L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    100L,
+                    4200,
+                    false,
+                    null,
+                    current
+            );
+
+            Book nothing = booksTestMapper.getByIdIncludingDeleted(999L);
+            assertThat(nothing).isNull();
+
+            int affectedRows = bookMapper.update(book);
+            assertThat(affectedRows).isEqualTo(0);
+        }
+
+        @Test
+        void returnZeroWhenBookIsLogicallyDeleted() {
+            LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
+            Book book = new Book(
+                    2L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    100L,
+                    4200,
+                    false,
+                    null,
+                    current
+            );
+
+            Book deletedBook = booksTestMapper.getByIdIncludingDeleted(2L);
+            assertThat(deletedBook.getIsDeleted()).isTrue();
+
+            int affectedRows = bookMapper.update(book);
+            assertThat(affectedRows).isEqualTo(0);
+        }
+
+        @Test
+        void throwExceptionWhenPublisherIdDoesNotExist() {
+            LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
+            Book book = new Book(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    999L,
+                    100L,
+                    4200,
+                    false,
+                    null,
+                    current
+            );
+
+            Throwable thrown = catchThrowable(() -> bookMapper.update(book));
+            assertThat(thrown).isInstanceOf(DataIntegrityViolationException.class);
+            Throwable rootCause = thrown.getCause();
+            assertThat(rootCause).isInstanceOf(SQLIntegrityConstraintViolationException.class);
+            int errorCode = ((SQLIntegrityConstraintViolationException) rootCause).getErrorCode();
+            assertThat(errorCode).isEqualTo(1452);
+        }
+
+        @Test
+        void throwExceptionWhenUserIdDoesNotExist() {
+            LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
+            Book book = new Book(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    999L,
+                    4200,
+                    false,
+                    null,
+                    current
+            );
+
+            Throwable thrown = catchThrowable(() -> bookMapper.update(book));
+            assertThat(thrown).isInstanceOf(DataIntegrityViolationException.class);
+            Throwable rootCause = thrown.getCause();
+            assertThat(rootCause).isInstanceOf(SQLIntegrityConstraintViolationException.class);
             int errorCode = ((SQLIntegrityConstraintViolationException) rootCause).getErrorCode();
             assertThat(errorCode).isEqualTo(1452);
         }

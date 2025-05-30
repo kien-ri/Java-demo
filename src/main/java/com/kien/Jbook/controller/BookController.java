@@ -1,6 +1,7 @@
 package com.kien.Jbook.controller;
 
 import com.kien.Jbook.model.dto.book.BookBasicInfo;
+import com.kien.Jbook.model.dto.book.BookUpdate;
 import com.kien.Jbook.model.dto.book.BookCreate;
 import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
@@ -25,6 +26,12 @@ public class BookController {
         } else {
             return ResponseEntity.ok(bookView);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity<BookBasicInfo> update(@RequestBody @Valid BookUpdate bookUpdate) {
+        BookBasicInfo info = bookService.update(bookUpdate);
+        return ResponseEntity.ok(info);
     }
 
     @PostMapping

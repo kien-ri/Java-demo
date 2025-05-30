@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @ResponseBody
@@ -55,7 +56,7 @@ public class GlobalExceptionHandler {
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             Map<String, Object> errorMap = new HashMap<>();
             errorMap.put(error.getField(), error.getRejectedValue());
-            errorMap.put("message", "入力された値が無効です");
+            errorMap.put(MSG_STR, MSG_INVALID_VALUE);
             errors.add(errorMap);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);

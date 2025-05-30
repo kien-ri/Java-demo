@@ -1,9 +1,11 @@
 package com.kien.Jbook.common;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@EqualsAndHashCode
 public class CustomException extends RuntimeException {
     private HttpStatus httpStatus;
     private String field;

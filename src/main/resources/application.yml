@@ -23,3 +23,4 @@ messages:
     insertError: "書籍情報が正しく登録されませんでした。"
     noIdGenerated: "書籍情報保存に失敗しました：IDが生成されませんでした"
     typeMissmatch: "パラメータの型が間違っています"
+    nonExistentBook: "指定IDの書籍情報が存在しません"
