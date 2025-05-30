@@ -4,6 +4,7 @@ public class StringUtils {
 
     /**
      * スネークケース（例: sample_text）をキャメルケース（例: sampleText）に変換する
+     * SQLエラーメッセージから特定のカラム名を取得する時に使用できる
      * @param input
      * @return
      */

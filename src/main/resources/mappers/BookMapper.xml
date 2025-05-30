@@ -50,4 +50,20 @@
         AND is_deleted = false
     </update>
 
+    <insert id="save" parameterType="Book" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `books`
+        SET
+        <if test="id != null">
+            id = #{id},
+        </if>
+        title = #{title},
+        title_kana = #{titleKana},
+        author = #{author},
+        publisher_id = #{publisherId},
+        user_id = #{userId},
+        price = #{price},
+        created_at = #{createdAt},
+        updated_at = #{updatedAt}
+    </insert>
+
 </mapper>
