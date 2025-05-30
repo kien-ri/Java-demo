@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class Book {
+    // TODO: 整理、修正予定
     public static final String FIELD_ID = "id";
     private Long id;
 
