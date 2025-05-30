@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kien.Jbook.common.CustomException;
 import com.kien.Jbook.model.dto.book.BookBasicInfo;
 import com.kien.Jbook.model.dto.book.BookUpdate;
-import com.kien.Jbook.common.CustomException;
-import com.kien.Jbook.model.dto.book.BookBasicInfo;
 import com.kien.Jbook.model.dto.book.BookCreate;
 import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -179,17 +176,17 @@ public class BookControllerTest {
 
             when(bookService.update(any())).thenReturn(expectedResult);
 
-            mockMvc.perform(put("/books")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isOk())
+            ResultActions perform = mockMvc.perform(put("/books")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isOk())
                     .andExpect(content().json(objectMapper.writeValueAsString(expectedResult)));
 
             verify(bookService, times(1)).update(any());
         }
 
         @Test
-        void return400WhenInvalidId() throws Exception {
+        void return400WhenIdIsNegative() throws Exception {
             BookUpdate bookUpdate = new BookUpdate(
                     -1L,
                     "Kotlin応用ガイド",
@@ -204,17 +201,42 @@ public class BookControllerTest {
                     "message", "入力された値が無効です。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isBadRequest())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
 
             verify(bookService, never()).update(any());
         }
 
         @Test
-        void return400WhenInvalidPublisherId() throws Exception {
+        void return400WhenIdIs0() throws Exception {
+            BookUpdate bookUpdate = new BookUpdate(
+                    0L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    100L,
+                    4200
+            );
+            Map<String, Object> error = Map.of(
+                    "id", 0L,
+                    "message", "入力された値が無効です。"
+            );
+
+            ResultActions perform = mockMvc.perform(put("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
+
+            verify(bookService, never()).update(any());
+        }
+
+        @Test
+        void return400WhenPublisherIdIsNegative() throws Exception {
             BookUpdate bookUpdate = new BookUpdate(
                     1L,
                     "Kotlin応用ガイド",
@@ -229,17 +251,42 @@ public class BookControllerTest {
                     "message", "入力された値が無効です。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isBadRequest())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
 
             verify(bookService, never()).update(any());
         }
 
         @Test
-        void return400WhenInvalidUserId() throws Exception {
+        void return400WhenPublisherIdIs0() throws Exception {
+            BookUpdate bookUpdate = new BookUpdate(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    0L,
+                    100L,
+                    4200
+            );
+            Map<String, Object> error = Map.of(
+                    "publisherId", 0L,
+                    "message", "入力された値が無効です。"
+            );
+
+            ResultActions perform = mockMvc.perform(put("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
+
+            verify(bookService, never()).update(any());
+        }
+
+        @Test
+        void return400WhenUserIdIsNegative() throws Exception {
             BookUpdate bookUpdate = new BookUpdate(
                     1L,
                     "Kotlin応用ガイド",
@@ -254,10 +301,35 @@ public class BookControllerTest {
                     "message", "入力された値が無効です。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isBadRequest())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
+
+            verify(bookService, never()).update(any());
+        }
+
+        @Test
+        void return400WhenUserIdIs0() throws Exception {
+            BookUpdate bookUpdate = new BookUpdate(
+                    1L,
+                    "Kotlin応用ガイド",
+                    "コトリン オウヨウ ガイド",
+                    "佐藤次郎",
+                    1L,
+                    0L,
+                    4200
+            );
+            Map<String, Object> error = Map.of(
+                    "userId", 0L,
+                    "message", "入力された値が無効です。"
+            );
+
+            ResultActions perform = mockMvc.perform(put("/books")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
 
             verify(bookService, never()).update(any());
@@ -279,10 +351,10 @@ public class BookControllerTest {
                     "message", "入力された値が無効です。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isBadRequest())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isBadRequest())
                     .andExpect(content().json(objectMapper.writeValueAsString(List.of(error))));
 
             verify(bookService, never()).update(any());
@@ -313,10 +385,10 @@ public class BookControllerTest {
                     "message", "存在しない外部キーです。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isNotFound())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isNotFound())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
 
             verify(bookService, times(1)).update(any());
@@ -347,10 +419,10 @@ public class BookControllerTest {
                     "message", "存在しない外部キーです。"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isNotFound())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isNotFound())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
 
             verify(bookService, times(1)).update(any());
@@ -381,10 +453,10 @@ public class BookControllerTest {
                     "message", "指定IDの書籍情報が存在しません"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isNotFound())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isNotFound())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
 
             verify(bookService, times(1)).update(any());
@@ -408,10 +480,10 @@ public class BookControllerTest {
                     "error", "予想外のエラーが発生しました。エラー内容：予想外のエラー"
             );
 
-            mockMvc.perform(put("/books")
+            ResultActions perform = mockMvc.perform(put("/books")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(bookUpdate)))
-                    .andExpect(status().isInternalServerError())
+                            .content(objectMapper.writeValueAsString(bookUpdate)));
+            perform.andExpect(status().isInternalServerError())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
 
             verify(bookService, times(1)).update(any());

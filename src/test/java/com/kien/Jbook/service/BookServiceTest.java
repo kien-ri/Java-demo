@@ -541,13 +541,11 @@ public class BookServiceTest {
                     1L,
                     "Kotlin応用ガイド"
             );
-
             when(bookMapper.update(any())).thenReturn(1);
 
-            BookBasicInfo bookUpdatedResponse = bookService.update(bookUpdate);
+            BookBasicInfo info = bookService.update(bookUpdate);
 
-            assertThat(bookUpdatedResponse).isEqualTo(expectedResult);
-
+            assertThat(info).isEqualTo(expectedResult);
             verify(bookMapper, times(1)).update(any());
         }
 
@@ -562,6 +560,7 @@ public class BookServiceTest {
                     100L,
                     4200
             );
+
             CustomException expectedError = new CustomException(
                     "入力された値が無効です。",
                     HttpStatus.BAD_REQUEST,
@@ -569,13 +568,12 @@ public class BookServiceTest {
                     -1L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -590,6 +588,7 @@ public class BookServiceTest {
                     100L,
                     4200
             );
+
             CustomException expectedError = new CustomException(
                     "入力された値が無効です。",
                     HttpStatus.BAD_REQUEST,
@@ -597,13 +596,12 @@ public class BookServiceTest {
                     0L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -625,13 +623,12 @@ public class BookServiceTest {
                     -1L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -653,13 +650,12 @@ public class BookServiceTest {
                     0L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -681,13 +677,12 @@ public class BookServiceTest {
                     -1L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -709,13 +704,12 @@ public class BookServiceTest {
                     0L
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -737,13 +731,12 @@ public class BookServiceTest {
                     -1
             );
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, never()).update(any());
         }
 
@@ -776,13 +769,12 @@ public class BookServiceTest {
             );
             when(bookMapper.update(any())).thenThrow(springException);
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, times(1)).update(any());
         }
 
@@ -815,13 +807,12 @@ public class BookServiceTest {
             );
             when(bookMapper.update(any())).thenThrow(springException);
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, times(1)).update(any());
         }
 
@@ -876,13 +867,12 @@ public class BookServiceTest {
 
             when(bookMapper.update(any())).thenReturn(0);
 
-            Throwable thrown = catchThrowable(() -> bookService.update(bookUpdate));
-            assertThat(thrown)
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(expectedError.getMessage());
-            assertThat(((CustomException) thrown).getField()).isEqualTo(expectedError.getField());
-            assertThat(((CustomException) thrown).getValue()).isEqualTo(expectedError.getValue());
+            CustomException e = catchThrowableOfType(
+                    () -> bookService.update(bookUpdate),
+                    CustomException.class
+            );
 
+            assertThat(e).isEqualTo(expectedError);
             verify(bookMapper, times(1)).update(any());
         }
 

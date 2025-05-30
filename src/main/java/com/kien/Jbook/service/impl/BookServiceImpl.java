@@ -11,13 +11,10 @@ import com.kien.Jbook.model.dto.book.BookUpdate;
 import com.kien.Jbook.model.dto.book.BookCreate;
 import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
-import com.kien.Jbook.utils.DBExceptionUtils;
-import com.kien.Jbook.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +22,6 @@ import static com.kien.Jbook.utils.StringUtils.toCamelCase;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-
-import static com.kien.Jbook.utils.StringUtils.toCamelCase;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -129,36 +124,6 @@ public class BookServiceImpl implements BookService {
         );
     }
 
-    private void validateBookParam(Book book) {
-        // Validate book ID
-        ValidationUtils.validatePositiveId(
-                book.getId(),
-                Book.FIELD_ID,
-                MSG_INVALID_VALUE
-        );
-        // Validate publisher ID
-        ValidationUtils.validatePositiveId(
-                book.getPublisherId(),
-                Book.FIELD_PUBLISHER_ID,
-                MSG_INVALID_VALUE
-        );
-        // Validate user ID
-        ValidationUtils.validatePositiveId(
-                book.getUserId(),
-                Book.FIELD_USER_ID,
-                MSG_INVALID_VALUE
-        );
-        // Validate price
-        if (book.getPrice() != null && book.getPrice() < 0) {
-            throw new CustomException(
-                    MSG_INVALID_VALUE,
-                    HttpStatus.BAD_REQUEST,
-                    Book.FIELD_PRICE,
-                    book.getPrice()
-            );
-        }
-    }
-
     @Override
     public BookBasicInfo update(BookUpdate bookUpdate) {
         // 1. DTO to Entity
@@ -216,19 +181,19 @@ public class BookServiceImpl implements BookService {
         // Validate book ID
         ValidationUtils.validatePositiveId(
                 book.getId(),
-                "id",
+                Book.FIELD_ID,
                 MSG_INVALID_VALUE
         );
         // Validate publisher ID
         ValidationUtils.validatePositiveId(
                 book.getPublisherId(),
-                "publisherId",
+                Book.FIELD_PUBLISHER_ID,
                 MSG_INVALID_VALUE
         );
         // Validate user ID
         ValidationUtils.validatePositiveId(
                 book.getUserId(),
-                "userId",
+                Book.FIELD_USER_ID,
                 MSG_INVALID_VALUE
         );
         // Validate price
@@ -236,7 +201,7 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_INVALID_VALUE,
                     HttpStatus.BAD_REQUEST,
-                    "price",
+                    Book.FIELD_PRICE,
                     book.getPrice()
             );
         }

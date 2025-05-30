@@ -440,6 +440,9 @@ public class BookMapperTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS
     )
     class UpdateTest{
+        @Autowired
+        BooksTestMapper booksTestMapper;
+
         @Test
         void updateShouldUpdateBookAndReturnAffectedRows() {
             LocalDateTime current = LocalDateTime.of(2025, 5, 15, 16, 10, 30);
@@ -497,7 +500,7 @@ public class BookMapperTest {
                     current
             );
 
-            BookView nothing = bookMapper.getById(999L);
+            Book nothing = booksTestMapper.getByIdIncludingDeleted(999L);
             assertThat(nothing).isNull();
 
             int affectedRows = bookMapper.update(book);
@@ -520,8 +523,8 @@ public class BookMapperTest {
                     current
             );
 
-            BookView nothing = bookMapper.getById(2L);
-            assertThat(nothing).isNull();
+            Book deletedBook = booksTestMapper.getByIdIncludingDeleted(2L);
+            assertThat(deletedBook.getIsDeleted()).isTrue();
 
             int affectedRows = bookMapper.update(book);
             assertThat(affectedRows).isEqualTo(0);
