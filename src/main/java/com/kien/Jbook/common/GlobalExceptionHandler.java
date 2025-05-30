@@ -52,11 +52,13 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<Map<String, Object>>> handleValidationExceptions(MethodArgumentNotValidException e) {
-        List<Map<String, Object>> errors = e.getBindingResult().getFieldErrors().stream()
-                .map(error -> Map.of(
-                        error.getField(), error.getRejectedValue(),
-                        MSG_STR, MSG_INVALID_VALUE
-                )).collect(Collectors.toList());
+        List<Map<String, Object>> errors = new ArrayList<>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put(error.getField(), error.getRejectedValue());
+            errorMap.put(MSG_STR, MSG_INVALID_VALUE);
+            errors.add(errorMap);
+        }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 

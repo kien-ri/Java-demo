@@ -13,8 +13,8 @@ import com.kien.Jbook.model.dto.book.BookView;
 import com.kien.Jbook.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +34,14 @@ public class BookServiceImpl implements BookService {
     @Value("${messages.errors.nonExistentBook}")
     private String MSG_NON_EXISTENT_BOOK = "";
 
-    @Value("${messages.errors.nonExistentFK}")
-    private String MSG_NONEXISTENT_FK = "";
-
     @Value("${messages.errors.insertError}")
     private String MSG_INSERT_ERROR = "";
 
     @Value("${messages.errors.noIdGenerated}")
     private String MSG_NO_ID_GENERATED = "";
+
+    @Value("${messages.errors.nonExistentFK}")
+    private String MSG_NONEXISTENT_FK = "";
 
     @Value("${messages.errors.duplicateKey}")
     private String MSG_DUPLICATE_KEY = "";
@@ -140,16 +140,8 @@ public class BookServiceImpl implements BookService {
         } catch (DataIntegrityViolationException e) {
             // 3.1 外部キー存在しないエラー
             if (DBExceptionUtils.isForeignKeyViolation(e)) {
-                String errorMsg = e.getMessage() != null ? e.getMessage() : "";
-                String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(errorMsg));
-                Object propertyValue = null;
-                try {
-                    Field property = BookUpdate.class.getDeclaredField(propertyName);
-                    property.setAccessible(true);
-                    propertyValue = property.get(bookUpdate);
-                } catch (NoSuchFieldException | IllegalAccessException ex) {
-                    propertyValue = null;
-                }
+                String propertyName = toCamelCase(DBExceptionUtils.extractForeignKeyColumn(e.getMessage()));
+                Object propertyValue = ReflectionUtils.getPropertyValue(bookUpdate, propertyName);
                 throw new CustomException(
                         MSG_NONEXISTENT_FK,
                         HttpStatus.NOT_FOUND,
@@ -165,7 +157,7 @@ public class BookServiceImpl implements BookService {
             throw new CustomException(
                     MSG_NON_EXISTENT_BOOK,
                     HttpStatus.NOT_FOUND,
-                    "id",
+                    Book.FIELD_ID,
                     book.getId()
             );
         }
