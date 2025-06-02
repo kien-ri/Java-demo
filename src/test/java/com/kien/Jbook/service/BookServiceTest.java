@@ -215,7 +215,7 @@ public class BookServiceTest {
                     "山田太郎",
                     1L,
                     1L,
-                    -500
+                    -1
             );
 
             CustomException e = assertThrows(CustomException.class, () -> {
@@ -223,7 +223,7 @@ public class BookServiceTest {
             });
             assertEquals("入力された値が無効です。", e.getMessage());
             assertEquals("price", e.getField());
-            assertEquals(-500, e.getValue());
+            assertEquals(-1, e.getValue());
             assertEquals(HttpStatus.BAD_REQUEST, e.getHttpStatus());
             verify(bookMapper, never()).save(any());
         }
@@ -487,7 +487,7 @@ public class BookServiceTest {
                     "コトリン ニュウモン",
                     "山田太郎",
                     1L,
-                    1L,
+                    100L,
                     2500
             );
             when(bookMapper.save(any())).thenReturn(1);
