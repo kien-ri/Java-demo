@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+/**
+ * 一括処理全体の結果をまとめたDTO。
+ * 成功したアイテムと失敗したアイテムのリストを保持します。
+ */
 @Getter
 @AllArgsConstructor
 public class BookBatchProcessedResult {
